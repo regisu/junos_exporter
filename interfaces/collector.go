@@ -63,7 +63,7 @@ func (c *interfaceCollector) init() {
 	c.transmitBytesDesc = prometheus.NewDesc(prefix+"transmit_bytes", "Transmitted data in bytes", l, nil)
 	c.transmitPacketsDesc = prometheus.NewDesc(prefix+"transmit_packets_total", "Transmitted packets", l, nil)
 	c.transmitErrorsDesc = prometheus.NewDesc(prefix+"transmit_errors", "Number of errors caused by outgoing packets", l, nil)
-	c.transmitMtuErrorsDesc = prometheus.NewDesc(prefix+"mtu_errors", "Number of errors caused by bad mtu packets", l, nil)
+	c.transmitMtuErrorsDesc = prometheus.NewDesc(prefix+"mtu_errors", "Number of errors caused by packets with bad mtu", l, nil)
 	c.transmitDropsDesc = prometheus.NewDesc(prefix+"transmit_drops", "Number of dropped outgoing packets", l, nil)
 	c.ipv6receiveBytesDesc = prometheus.NewDesc(prefix+"IPv6_receive_bytes_total", "Received IPv6 data in bytes", l, nil)
 	c.ipv6receivePacketsDesc = prometheus.NewDesc(prefix+"IPv6_receive_packets_total", "Received IPv6 packets", l, nil)
