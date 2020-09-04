@@ -24,6 +24,7 @@ type interfaceCollector struct {
 	transmitBytesDesc       *prometheus.Desc
 	transmitPacketsDesc     *prometheus.Desc
 	transmitErrorsDesc      *prometheus.Desc
+	transmitMtuErrorsDesc	*prometheus.Desc
 	transmitDropsDesc       *prometheus.Desc
 	ipv6receiveBytesDesc    *prometheus.Desc
 	ipv6receivePacketsDesc  *prometheus.Desc
@@ -62,6 +63,7 @@ func (c *interfaceCollector) init() {
 	c.transmitBytesDesc = prometheus.NewDesc(prefix+"transmit_bytes", "Transmitted data in bytes", l, nil)
 	c.transmitPacketsDesc = prometheus.NewDesc(prefix+"transmit_packets_total", "Transmitted packets", l, nil)
 	c.transmitErrorsDesc = prometheus.NewDesc(prefix+"transmit_errors", "Number of errors caused by outgoing packets", l, nil)
+	c.transmitMtuErrorsDesc = prometheus.NewDesc(prefix+"mtu_errors", "Number of errors caused by bad mtu packets", l, nil)
 	c.transmitDropsDesc = prometheus.NewDesc(prefix+"transmit_drops", "Number of dropped outgoing packets", l, nil)
 	c.ipv6receiveBytesDesc = prometheus.NewDesc(prefix+"IPv6_receive_bytes_total", "Received IPv6 data in bytes", l, nil)
 	c.ipv6receivePacketsDesc = prometheus.NewDesc(prefix+"IPv6_receive_packets_total", "Received IPv6 packets", l, nil)
@@ -84,6 +86,7 @@ func (c *interfaceCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.transmitPacketsDesc
 	ch <- c.transmitDropsDesc
 	ch <- c.transmitErrorsDesc
+	ch <- c.transmitMtuErrorsDesc
 	ch <- c.ipv6receiveBytesDesc
 	ch <- c.ipv6receivePacketsDesc
 	ch <- c.ipv6transmitBytesDesc
@@ -132,6 +135,7 @@ func (c *interfaceCollector) interfaceStats(client *rpc.Client) ([]*InterfaceSta
 			Speed:               phy.Speed,
 			TransmitDrops:       float64(phy.OutputErrors.Drops),
 			TransmitErrors:      float64(phy.OutputErrors.Errors),
+			TransmitMtuErrors:   float64(phy.OutputErrors.MtuErrors),
 			TransmitBytes:       float64(phy.Stats.OutputBytes),
 			TransmitPackets:     float64(phy.Stats.OutputPackets),
 			IPv6ReceiveBytes:    float64(phy.Stats.IPv6Traffic.InputBytes),
@@ -231,6 +235,7 @@ func (c *interfaceCollector) collectForInterface(s *InterfaceStats, device *conn
 		ch <- prometheus.MustNewConstMetric(c.operStatusDesc, prometheus.GaugeValue, float64(operUp), l...)
 		ch <- prometheus.MustNewConstMetric(c.errorStatusDesc, prometheus.GaugeValue, float64(err), l...)
 		ch <- prometheus.MustNewConstMetric(c.transmitErrorsDesc, prometheus.GaugeValue, s.TransmitErrors, l...)
+		ch <- prometheus.MustNewConstMetric(c.transmitMtuErrorsDesc, prometheus.GaugeValue, s.TransmitMtuErrors, l...)
 		ch <- prometheus.MustNewConstMetric(c.transmitDropsDesc, prometheus.GaugeValue, s.TransmitDrops, l...)
 		ch <- prometheus.MustNewConstMetric(c.receiveErrorsDesc, prometheus.GaugeValue, s.ReceiveErrors, l...)
 		ch <- prometheus.MustNewConstMetric(c.receiveDropsDesc, prometheus.GaugeValue, s.ReceiveDrops, l...)

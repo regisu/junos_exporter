@@ -17,6 +17,7 @@ type InterfaceStats struct {
 	TransmitPackets     float64
 	TransmitErrors      float64
 	TransmitDrops       float64
+	TransmitMtuErrors   float64
 	IPv6ReceiveBytes    float64
 	IPv6ReceivePackets  float64
 	IPv6TransmitBytes   float64

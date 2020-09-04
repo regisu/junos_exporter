@@ -22,6 +22,7 @@ type PhyInterface struct {
 	OutputErrors struct {
 		Drops  uint64 `xml:"output-drops"`
 		Errors uint64 `xml:"output-errors"`
+		MtuErrors uint64 `xml:"mtu-errors"`
 	} `xml:"output-error-list"`
 	InterfaceFlapped struct {
 		Seconds uint64 `xml:"seconds,attr"`
